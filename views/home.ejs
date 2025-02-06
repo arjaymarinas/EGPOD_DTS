@@ -1,0 +1,145 @@
+<%- include('partials/header') %>
+
+<div class="container bg-body-tertiary min-vh-100 pt-5">
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+        <!--<svg class="bi mt-4 mb-3" style="color: var(--bs-indigo);" width="100" height="100"><use xlink:href="#bootstrap"></use></svg>-->
+        <h1 class="text-body-emphasis mt-4">EGP Document Tracking and Repository</h1>
+        <p class="col-lg-8 mx-auto fs-5 text-muted">
+          Search document or create a new one.
+        </p>
+        <div class="input-group mb-3 px-5 py-3">
+            <input type="text" class="form-control rounded-start-pill ps-4 fs-5" id="searchDocumentInput" aria-label="Text input with dropdown button" placeholder="Search documents ..." style="height: 60px;">
+            <button class="btn btn-outline-secondary dropdown-toggle rounded-end-pill pe-4" id="dropdownButton" type="button" data-bs-toggle="dropdown" aria-expanded="false">Search by</button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" data-value="Name" href="#">Name</a></li>
+                <li><a class="dropdown-item" href="#" data-value="Status">Status</a></li>
+                <li><a class="dropdown-item" href="#" data-value="Department">Department</a></li>
+                <!--<li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Create New</a></li>-->
+            </ul>
+            <ul id="searchSuggestionsList" class="list-group position-absolute rounded" style="z-index: 1050; overflow-y: auto; display: none; top: 78px;"></ul>
+        </div>
+        <div class="d-inline-flex gap-2 mb-4">
+          <button class="d-inline-flex align-items-center btn btn-primary px-3 rounded-pill" type="button">
+            Browse documents
+          </button>
+          <button class="d-inline-flex align-items-center btn btn-outline-secondary px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#modalCreateNew" type="button">
+            Create new
+          </button>
+          
+        </div>
+    </div>
+</div>
+
+<div class="modal fade p-4 py-md-5" id="modalCreateNew" tabindex="-1" role="dialog" aria-labelledby="modalCreateNew" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content rounded-4 shadow">
+        <div class="modal-header p-5 pb-4 border-bottom-0">
+          <h1 class="fw-bold mb-0 fs-2">Create New</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-5 pt-0">
+          <form id="createDocumentForm" method="POST">
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-floating mb-3">
+                        <input name="documentCode" type="text" class="form-control rounded-3" id="documentCodeInput">
+                        <label for="documentCodeInput">Document Code</label>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="form-floating mb-3">
+                        <select name="documentOrigin" class="form-control rounded-3" id="documentOriginInput">
+                            <option value="">-- --</option>
+                            <option value="1">ITRPD - Information Technology Research and Policy Division</option>
+                            <option value="2">EGPDD - Electronic Government Procurement Development Division</option>
+                            <option value="3">ITSD - Information Technology Services Division</option>
+                            <option value="4">CSD - Customer Service Division</option>
+                            <option value="5">ISD - Information Security Division</option>
+                        </select>
+                        <label for="documentOriginInput">Document Origin</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-floating mb-3">
+                        <select name="documentEntry" class="form-control rounded-3" id="documentEntryInput">
+                            <option value="">-- --</option>
+                            <option value="1">Incoming</option>
+                            <option value="2">Outgoing</option>
+                        </select>
+                        <label for="documentEntryInput">Entry Type</label>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="form-floating mb-3 dropdown">
+                        <!--<input class="form-control rounded-3 dropdown-toggle" id="documentCategoryMultiSelect" data-bs-toggle="dropdown">-->
+                        <!--<ul class="dropdown-menu w-100" aria-labelledby="documentCategoryMultiSelect" id="documentCategoryMultiSelect">
+                            <li>
+                                <label class="dropdown-item">
+                                    <input type="checkbox" value="Option 1"> Payment
+                                </label>
+                            </li>
+                            <li>
+                                <label class="dropdown-item">
+                                    <input type="checkbox" value="Option 2"> SSMR - System Support and Maintenance Report
+                                </label>
+                            </li>
+                            <li>
+                                <label class="dropdown-item">
+                                    <input type="checkbox" value="Option 3"> Communication Letter
+                                </label>
+                            </li>
+                            <li>
+                                <label class="dropdown-item">
+                                    <input type="checkbox" value="Option 3"> Progres Report
+                                </label>
+                            </li>
+                        </ul>-->
+                        <select name="documentCategory[]" class="form-control rounded-3" id="documentCategoryMultiSelect" multiple>   
+                            <option value="1">Option 1</option>
+                            <option value="2">Option 2</option>
+                            <option value="3">Option 3</option>
+                        </select>
+                        <label for="documentCategoryMultiSelect">Document Category</label>
+                    </div>                        
+                </div>
+            </div>
+            <div class="form-floating mb-3">
+                <input name="documentTitle" type="text" class="form-control rounded-3" id="documentTitleInput">
+                <label for="documentTitleInput">Document Title</label>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea name="documentDesc" class="form-control" placeholder="Leave a comment here" id="documentDescInput" style="height: 150px;"></textarea>
+                <label for="documentDescInput">Description</label>
+            </div>
+            <div class="form-floating mb-3 dropdown">
+                <label for="documentActionRequestMultiSelect">Request Action Category</label>
+                <select name="documentAction[]" class="form-control rounded-3" id="documentActionRequestMultiSelect" multiple>   
+                    <option value="1">For Information / Reference</option>
+                    <option value="2">For Signature</option>
+                    <option value="3">Comments / Recommendation</option>
+                </select>
+            </div>                        
+            <button class="w-100 mb-2 btn rounded-3 btn-primary" id="saveDocumentBtn" type="submit">Save</button>
+            <!--<small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>-->
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="successDocumentToast" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header text-bg-success">
+            <strong class="me-auto">Success</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Document successfully created.
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

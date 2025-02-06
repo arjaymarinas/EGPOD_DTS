@@ -1,0 +1,129 @@
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+
+    // Add event listener to update button text on dropdown item click
+    document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
+        item.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            const selectedValue = this.getAttribute('data-value'); // Get data-value attribute
+            document.getElementById('dropdownButton').textContent = selectedValue; // Update button text
+        });
+    });
+
+    // Multiselect
+    /**document.querySelectorAll('.dropdown-menu input[type="checkbox"]').forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+            const selectedOptions = Array.from(
+                document.querySelectorAll('.dropdown-menu input[type="checkbox"]:checked')
+            ).map((input) => input.value);
+
+            const dropdownButton = document.getElementById('multiSelectDropdown');
+            dropdownButton.textContent = selectedOptions.length ? selectedOptions.join(', ') : 'Select Options';
+        });
+    });**/
+
+    // Success Message
+    const toastTrigger = document.getElementById('saveDocumentBtn');
+    const successDocumentToast = document.getElementById('successDocumentToast');
+
+    if (toastTrigger) {
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(successDocumentToast)
+        toastTrigger.addEventListener('click', () => {
+            toastBootstrap.show();
+        });
+    }
+
+    // Data of search input
+    const suggestions = [
+        "Apple",
+        "Banana",
+        "Cherry",
+        "Date",
+        "Elderberry",
+        "Fig",
+        "Grape",
+        "Honeydew"
+    ];
+
+    // Search and Suggestion Logic
+    const searchDocumentInput = document.getElementById('searchDocumentInput');
+    const searchSuggestionsList = document.getElementById('searchSuggestionsList');
+
+    searchDocumentInput.addEventListener('input', () => {
+        const query = searchDocumentInput.value.toLowerCase().trim();
+        searchSuggestionsList.innerHTML = '';
+
+        if (query) {
+            const filteredSuggestions = suggestions.filter(item => 
+                item.toLowerCase().includes(query)
+            );
+
+            if (filteredSuggestions.length > 0) {
+                filteredSuggestions.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    li.className = 'list-group-item fs-5';
+                    li.addEventListener('click', () => {
+                        searchDocumentInput.value = item;
+                        searchSuggestionsList.style.display = 'none';
+                    });
+                    searchSuggestionsList.appendChild(li);
+                });
+                searchSuggestionsList.style.display = 'block';
+            } else {
+                searchSuggestionsList.style.display = 'none';
+            }
+        } else {
+            searchSuggestionsList.style.display = 'none';
+        }
+
+        const inputWidth = searchDocumentInput.offsetWidth;
+        searchSuggestionsList.style.width = `${inputWidth}px`;
+        //suggestionsList.style.top = `${searchDocumentInput.offsetHeight}px`;
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.form-group')) {
+            searchSuggestionsList.style.display = 'none';
+        }
+    });
+
+    // Multi Select
+    new Choices('#documentCategoryMultiSelect', {
+        removeItemButton: true
+    });
+
+    new Choices('#documentActionRequestMultiSelect', {
+        removeItemButton: true
+    });
+
+    // Insert Document Form Data
+    document.getElementById('createDocumentForm').addEventListener('submit', async(event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                const response = await fetch('/api/document/insert', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                if(result.ok){
+                    alert("Data created successfully");
+                }else{
+                    alert("Error: " + result.message)
+                }
+            } catch (error) {
+                console.log("Error: " + error);
+                alert("An error occured while submitting the form");
+            }
+        })
+</script>
+</body>
+</html>
