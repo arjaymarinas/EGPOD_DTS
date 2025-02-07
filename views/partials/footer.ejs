@@ -22,17 +22,6 @@
         });
     });**/
 
-    // Success Message
-    const toastTrigger = document.getElementById('saveDocumentBtn');
-    const successDocumentToast = document.getElementById('successDocumentToast');
-
-    if (toastTrigger) {
-        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(successDocumentToast)
-        toastTrigger.addEventListener('click', () => {
-            toastBootstrap.show();
-        });
-    }
-
     // Data of search input
     const suggestions = [
         "Apple",
@@ -102,7 +91,10 @@
             event.preventDefault();
 
             const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData);
+            const data = Object.fromEntries(Array.from(formData.keys(), key => {
+                const val = formData.getAll(key)
+                return [ key, val.length > 1 ? val : val.pop() ]
+            }))
 
             try {
                 const response = await fetch('/api/document/insert', {
@@ -112,10 +104,15 @@
                     },
                     body: JSON.stringify(data)
                 });
-                
+
                 const result = await response.json();
+
                 if(result.ok){
-                    alert("Data created successfully");
+                    const successDocumentToast = document.getElementById('successDocumentToast');
+                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(successDocumentToast);
+                    bootstrap.Modal.getInstance('#modalCreateNew').hide();
+                    document.getElementById("createDocumentForm").reset();
+                    toastBootstrap.show();
                 }else{
                     alert("Error: " + result.message)
                 }

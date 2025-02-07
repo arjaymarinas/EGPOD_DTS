@@ -1,8 +1,8 @@
 import express from "express";
-import { createDocument } from "../controller/documentController.js";
+import { newDocument } from "../controller/documentController.js";
 
 const router = express.Router();
 
-router.post('/document/insert', createDocument);
+router.post('/document/insert', newDocument);
 
 export default router;
