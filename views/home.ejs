@@ -8,21 +8,21 @@
           Search document or create a new one.
         </p>
         <div class="input-group mb-3 px-5 py-3">
-            <input type="text" class="form-control rounded-start-pill ps-4 fs-5" id="searchDocumentInput" aria-label="Text input with dropdown button" placeholder="Search documents ..." style="height: 60px;">
-            <button class="btn btn-outline-secondary dropdown-toggle rounded-end-pill pe-4" id="dropdownButton" type="button" data-bs-toggle="dropdown" aria-expanded="false">Search by</button>
+            <input type="text" class="form-control rounded-4 ps-4 fs-5" id="searchDocumentInput" aria-label="Text input with dropdown button" placeholder="Search documents ..." style="height: 60px;">
+            <!--<button class="btn btn-outline-secondary dropdown-toggle rounded-end-pill pe-4" id="dropdownButton" type="button" data-bs-toggle="dropdown" aria-expanded="false">Search by</button>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" data-value="Name" href="#">Name</a></li>
                 <li><a class="dropdown-item" href="#" data-value="Status">Status</a></li>
                 <li><a class="dropdown-item" href="#" data-value="Department">Department</a></li>
-                <!--<li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Create New</a></li>-->
-            </ul>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Create New</a></li>
+            </ul>-->
             <ul id="searchSuggestionsList" class="list-group position-absolute rounded" style="z-index: 1050; overflow-y: auto; display: none; top: 78px;"></ul>
         </div>
         <div class="d-inline-flex gap-2 mb-4">
-          <button class="d-inline-flex align-items-center btn btn-primary px-3 rounded-pill" type="button">
+          <a href="/masterlist" class="d-inline-flex align-items-center btn btn-primary px-3 rounded-pill">
             Browse documents
-          </button>
+          </a>
           <button class="d-inline-flex align-items-center btn btn-outline-secondary px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#modalCreateNew" type="button">
             Create new
           </button>
@@ -51,11 +51,9 @@
                     <div class="form-floating mb-3">
                         <select name="documentOrigin" class="form-control rounded-3" id="documentOriginInput">
                             <option value="">-- --</option>
-                            <option value="1">ITRPD - Information Technology Research and Policy Division</option>
-                            <option value="2">EGPDD - Electronic Government Procurement Development Division</option>
-                            <option value="3">ITSD - Information Technology Services Division</option>
-                            <option value="4">CSD - Customer Service Division</option>
-                            <option value="5">ISD - Information Security Division</option>
+                            <% departments.forEach(department => { %>
+                                <option value="<%= department.id %>"><%= department.name + " (" + department.code + ")" %></p>
+                            <% }); %>
                         </select>
                         <label for="documentOriginInput">Document Origin</label>
                     </div>
@@ -66,43 +64,20 @@
                     <div class="form-floating mb-3">
                         <select name="documentInOut" class="form-control rounded-3" id="documentEntryInput">
                             <option value="">-- --</option>
-                            <option value="1">Incoming</option>
-                            <option value="2">Outgoing</option>
+                            <option value="in">Incoming</option>
+                            <option value="out">Outgoing</option>
                         </select>
                         <label for="documentEntryInput">Entry Type</label>
                     </div>
                 </div>
                 <div class="col-8">
                     <div class="form-floating mb-3 dropdown">
-                        <!--<input class="form-control rounded-3 dropdown-toggle" id="documentCategoryMultiSelect" data-bs-toggle="dropdown">-->
-                        <!--<ul class="dropdown-menu w-100" aria-labelledby="documentCategoryMultiSelect" id="documentCategoryMultiSelect">
-                            <li>
-                                <label class="dropdown-item">
-                                    <input type="checkbox" value="Option 1"> Payment
-                                </label>
-                            </li>
-                            <li>
-                                <label class="dropdown-item">
-                                    <input type="checkbox" value="Option 2"> SSMR - System Support and Maintenance Report
-                                </label>
-                            </li>
-                            <li>
-                                <label class="dropdown-item">
-                                    <input type="checkbox" value="Option 3"> Communication Letter
-                                </label>
-                            </li>
-                            <li>
-                                <label class="dropdown-item">
-                                    <input type="checkbox" value="Option 3"> Progres Report
-                                </label>
-                            </li>
-                        </ul>-->
                         <select name="documentCategory" class="form-control rounded-3" id="documentCategoryMultiSelect" multiple>   
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
+                            <% categories.forEach(category => { %>
+                                <option value="<%= category.id %>"><%= category.name %></p>
+                            <% }); %>
                         </select>
-                        <label for="documentCategoryMultiSelect">Document Category</label>
+                        <label for="documentCategoryMultiSelect" style="padding-top: 4px; font-size: 14px; color: rgb(20 20 20 / 65%);">Document Category</label>
                     </div>                        
                 </div>
             </div>
@@ -114,14 +89,24 @@
                 <textarea name="documentDesc" class="form-control" placeholder="Leave a comment here" id="documentDescInput" style="height: 150px;"></textarea>
                 <label for="documentDescInput">Description</label>
             </div>
-            <div class="form-floating mb-3 dropdown">
-                <label for="documentActionRequestMultiSelect">Request Action Category</label>
-                <select name="documentActionRequest" class="form-control rounded-3" id="documentActionRequestMultiSelect" multiple>   
-                    <option value="1">For Information / Reference</option>
-                    <option value="2">For Signature</option>
-                    <option value="3">Comments / Recommendation</option>
-                </select>
-            </div>                        
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-floating mb-3 dropdown">
+                        <input name="documentDateTime" type="datetime-local" class="form-control rounded-3" id="dateTimeInput">
+                        <label for="dateTimeInput">Date & Time (In/Out)</label>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="form-floating mb-3 dropdown">
+                        <label for="documentActionRequestMultiSelect" style="padding-top: 4px; font-size: 14px; color: rgb(20 20 20 / 65%);">Request Action Category</label>
+                        <select name="documentActionRequest" class="form-control rounded-3" id="documentActionRequestMultiSelect" multiple>   
+                            <% actionCategories.forEach(actionCategory => { %>
+                                <option value="<%= actionCategory.id %>"><%= actionCategory.name %></p>
+                            <% }); %>
+                        </select>
+                    </div>   
+                </div>
+            </div>                     
             <button class="w-100 mb-2 btn rounded-3 btn-primary" id="saveDocumentBtn" type="submit">Save</button>
             <!--<small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>-->
           </form>
@@ -141,5 +126,144 @@
         </div>
     </div>
 </div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="failedDocumentToast" class="toast text-bg-failed" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header text-bg-failed">
+            <strong class="me-auto">Success</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Document successfully created.
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // Add event listener to update button text on dropdown item click
+    document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
+        item.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            const selectedValue = this.getAttribute('data-value'); // Get data-value attribute
+            document.getElementById('dropdownButton').textContent = selectedValue; // Update button text
+        });
+    });
+
+    // Multiselect
+    /**document.querySelectorAll('.dropdown-menu input[type="checkbox"]').forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+            const selectedOptions = Array.from(
+                document.querySelectorAll('.dropdown-menu input[type="checkbox"]:checked')
+            ).map((input) => input.value);
+
+            const dropdownButton = document.getElementById('multiSelectDropdown');
+            dropdownButton.textContent = selectedOptions.length ? selectedOptions.join(', ') : 'Select Options';
+        });
+    });**/
+
+    // Data of search input
+    const suggestions = <%- JSON.stringify(title) %>;
+
+    // Search and Suggestion Logic
+    const searchDocumentInput = document.getElementById('searchDocumentInput');
+    const searchSuggestionsList = document.getElementById('searchSuggestionsList');
+
+    searchDocumentInput.addEventListener('input', () => {
+        const query = searchDocumentInput.value.toLowerCase().trim();
+        searchSuggestionsList.innerHTML = '';
+
+        if (query) {
+            const filteredSuggestions = suggestions.filter(item => 
+                item.toLowerCase().includes(query)
+            );
+
+            console.log(filteredSuggestions);
+
+            if (filteredSuggestions.length > 0) {
+                filteredSuggestions.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    li.className = 'list-group-item fs-5';
+                    li.addEventListener('click', () => {
+                        searchDocumentInput.value = item;
+                        searchSuggestionsList.style.display = 'none';
+                    });
+                    searchSuggestionsList.appendChild(li);
+                });
+                searchSuggestionsList.style.display = 'block';
+            } else {
+                searchSuggestionsList.style.display = 'none';
+            }
+        } else {
+            searchSuggestionsList.style.display = 'none';
+        }
+
+        const inputWidth = searchDocumentInput.offsetWidth;
+        searchSuggestionsList.style.width = `${inputWidth}px`;
+        //suggestionsList.style.top = `${searchDocumentInput.offsetHeight}px`;
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.form-group')) {
+            searchSuggestionsList.style.display = 'none';
+        }
+    });
+
+    // Multi Select
+    new Choices('#documentCategoryMultiSelect', {
+        removeItemButton: true
+    });
+
+    new Choices('#documentActionRequestMultiSelect', {
+        removeItemButton: true
+    });
+
+    // Insert Document Form Data
+    document.getElementById('createDocumentForm').addEventListener('submit', async(event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+  
+            const data = Object.fromEntries(Array.from(formData.keys(), key => {
+                const val = formData.getAll(key)
+                return [ key, val.length > 1 ? val : val.pop() ]
+            }))
+
+            console.log(data);
+
+            try {
+                const response = await fetch('/api/document/insert', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if(result.ok){
+                    const successInfoToast = document.getElementById('successDocumentToast');
+                    const successInfo = bootstrap.Toast.getOrCreateInstance(successInfoToast);
+                    bootstrap.Modal.getInstance('#modalCreateNew').hide();
+                    document.getElementById("createDocumentForm").reset();
+                    successInfo.show();
+                }else{
+                    const failedInfoToast = document.getElementById('failedDocumentToast');
+                    const failedInfo = bootstrap.Toast.getOrCreateInstance(failedInfoToast);
+                    failedInfo.show();
+                }
+            } catch (error) {
+                console.log("Error: " + error);
+                alert("An error occured while submitting the form");
+            }
+        })
+
+
+        $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
 
 <%- include('partials/footer') %>

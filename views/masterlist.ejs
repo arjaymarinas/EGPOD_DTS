@@ -1,0 +1,45 @@
+<%- include('partials/header') %>
+
+<div class="container min-vh-100 pt-5">
+    <!--<div class="pt-5 text-center rounded-3">
+        <svg class="bi mt-4 mb-3" style="color: var(--bs-indigo);" width="100" height="100"><use xlink:href="#bootstrap"></use></svg>
+        <h1 class="text-body-emphasis mt-4">EGP Document Tracking and Repository</h1>
+        <p class="col-lg-8 mx-auto fs-5 text-muted">
+          Search document or create a new one.
+        </p>
+    </div>-->
+    <div class="m-4 border rounded-4 px-5 py-5">
+        <table class="table table-hover m-0 align-middle" id="myTable">
+            <thead>
+              <tr>
+                <th scope="col" class="text-muted">Title</th>
+                <th scope="col" class="text-muted">Date & Time</th>
+                <th scope="col" class="text-muted">Action</th>
+                <th scope="col" class="text-muted">Status</th>
+                <th scope="col" class="text-muted">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+                <% if(documents.length > 0){ %>
+                    <% documents.forEach(document => { %>
+                    <tr>
+                        <td>
+                            <p class="fw-medium mb-1"><%= document.title %></p>
+                            <p class="mb-0"><small class="badge rounded-1 bg-success-subtle fw-medium rounded-pill text-success-emphasis">Document <%= document.in_out.toUpperCase() %>: <%= document.name%></small></p>
+                        </td>
+                        <td><p class="fw-medium mb-1"><%= document.cvrt_date_time %></p></td>
+                        <td>
+                          <%- actionCategories.filter(item => document.action_request.includes(item.id)).map(item => `<span class="badge rounded-pill bg-primary-subtle text-primary-emphasis fw-medium">${item.name}</span>`).join(' ') %>
+                            <!--<span class="badge rounded-pill bg-primary-subtle text-primary-emphasis fw-medium">Write/Draft Response</span>-->
+                        </td>
+                        <td><span class="text-muted"><%= document.status %></span></td>
+                        <td><small class="text-primary">EDIT</small></td>
+                    </tr>
+                    <% }); %>
+                <% }; %>
+            </tbody>
+          </table>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,31 @@
+.choices {
+    margin: 0 !important;
+}
+
+.choices__inner{
+    height: calc(3.5rem + calc(var(--bs-border-width)* 2));
+    border-radius: 7px;
+    vertical-align: bottom;
+    background: none;
+    padding-top: 18px;
+}
+
+.choices__inner .choices__item{
+    font-size: 10px !important;
+    padding: 2px 8px !important;
+}
+
+.choices__input{
+    margin-top: 6px;
+    background: none;
+}
+
+.choices__inner .choices__button{
+    margin-left: 4px !important;
+}
+
+.choices__list--multiple .choices__item{
+    background-color: #198754;
+    border-color: #198754;
+}
+

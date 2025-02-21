@@ -1,11 +1,11 @@
-import { createDocument } from "../services/documentServices.js";
+import { createDocument, fetchAllDocuments } from "../services/documentService.js";
 
 export const newDocument = async (req, res) => {
-    const { documentCode, documentOrigin, documentInOut, documentCategory, documentTitle, documentDesc, documentActionRequest } = req.body;
-
+    const { documentCode, documentOrigin, documentInOut, documentCategory, documentTitle, documentDesc, documentDateTime, documentActionRequest } = req.body;
+    
     try {
-        await createDocument(documentCode, documentOrigin, documentInOut, documentCategory, documentTitle, documentDesc, documentActionRequest);
-        
+        await createDocument(documentCode, documentOrigin, documentInOut, documentCategory, documentTitle, documentDesc, documentDateTime, documentActionRequest);
+        console.log(documentCode);
         // Send success response
         res.status(201).json({
             ok: true,
@@ -22,3 +22,12 @@ export const newDocument = async (req, res) => {
         });
     }
 };
+
+export const getAllDocuments = async (req, res) =>  {
+    try {
+        const documents = await fetchAllDocuments();
+        return documents;
+    } catch (error) {
+        throw new Error("Error occured while trying to get the list of documents.");
+    }
+}
